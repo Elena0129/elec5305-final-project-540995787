@@ -1,0 +1,1 @@
+PairID,ClipID,PerformerID,Condition,Method,Status,ReferencePath,InputPath,OutputPath,ErrorID,CentroidErrorHz,LogPowerRMSEdB,LowErrorDB,MidErrorDB,HighErrorDB,OptimizationSeconds,LowGainDB,MidGainDB,HighGainDB,Peak,GainBoundaryHit

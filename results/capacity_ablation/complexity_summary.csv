@@ -1,0 +1,5 @@
+Method,GainParameters,TargetValueCount
+Centroid-shelf,1,1
+Spectrum-shelf,1,743
+Three-band,3,3
+Differentiable,3,743

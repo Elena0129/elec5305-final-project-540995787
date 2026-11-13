@@ -1,0 +1,3 @@
+Scenario,Clips,MeanAbsGainDB,GainLower95DB,GainUpper95DB,AdjustedPercent,BoundaryHitPercent,MeanInitialTargetErrorHz,MeanFinalTargetErrorHz,MeanOwnCentroidErrorHz,MeanRawRMSEdB,MeanShapeRMSEdB,ShapeLower95DB,ShapeUpper95DB
+Self-reference,30,0,0,0,0,0,0,0,0,0,0,0,0
+Fixed-target,30,10.7376666666667,9.908,11.529,100,80,389.309216056498,173.207091329547,216.108752808261,9.49591502352059,9.13906432344191,8.50176860887163,9.79908628421697

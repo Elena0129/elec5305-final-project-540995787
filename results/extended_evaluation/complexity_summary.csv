@@ -1,0 +1,5 @@
+Method,TargetValueCount,OptimizedGainCount,MedianOptimizationSeconds
+Distorted,0,0,0
+Centroid,1,1,1.88535504166666
+Three-band,3,3,0.197786625
+Differentiable,743,3,1.24410635416667

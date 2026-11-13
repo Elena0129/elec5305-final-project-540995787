@@ -1,0 +1,3 @@
+Metric,Baseline,Contender,MeanDifferenceDB,Lower95DB,Upper95DB,WinPercent,TiePercent
+RawRMSEdB,Centroid-shelf,Spectrum-shelf,-3.69303466451249,-4.6296752812324,-2.8021178928037,75,25
+ShapeRMSEdB,Centroid-shelf,Spectrum-shelf,-1.9631765183249,-2.58767017043221,-1.38476170466098,55.8333333333333,25
