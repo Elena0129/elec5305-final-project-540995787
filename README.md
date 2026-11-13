@@ -8,7 +8,9 @@ The research question is whether matching one spectral centroid can recover an E
 
 [Code repository](https://github.com/Elena0129/elec5305-final-project-540995787) · [Results](results/) · [Earlier project](https://github.com/Elena0129/elec5305-project-540995787)
 
-The project website is prepared in `index.html`. Its GitHub Pages address will be <https://elena0129.github.io/elec5305-final-project-540995787/> after Pages is enabled. The final report PDF and demonstration video links will be added after their final upload; a repository URL is not a video URL.
+[Project website](https://elena0129.github.io/elec5305-final-project-540995787/) · [Final report (PDF)](ELEC5305_Report_540995787.pdf) · [Recorded demonstration — 4 min 43 s](ELEC5305_Demo_YishuZhang.mp4)
+
+The narrated video explains the three methods, shows the MATLAB demonstration running, reviews the results and compares five pilot audio examples. The default demonstration fits the pilot example and reads saved formal results; use the reproduction commands below for fresh benchmark fitting.
 
 ## Requirements
 
@@ -26,7 +28,7 @@ The original Live Script records **MATLAB R2025b**. Required products are MATLAB
    run('run_project_demo.m')
    ```
 
-   Alternatively, open `Step01_prepare_audio.mlx` and select **Run All**. Both files contain the same executable sections; either entry is sufficient.
+   Alternatively, open `Step01_prepare_audio.mlx` and select **Run All**. The plain script and Live Script contain the same executable sections. Their different base names avoid MATLAB file-precedence conflicts; either entry is sufficient.
 
 The script checks the required files and toolboxes, reuses the supplied pilot excerpts, creates the high-shelf and mid-cut pilot distortions, fits the centroid and three-band corrections, and fits the differentiable correction on the same mid-cut pair. It produces spectra, gain searches, convergence plots and a four-method pilot comparison. Desktop playback includes the reference and high-shelf-distorted audio; set `playAudio` to `false` in the first section to skip playback.
 
