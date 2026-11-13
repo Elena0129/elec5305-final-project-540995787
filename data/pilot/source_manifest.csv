@@ -1,0 +1,4 @@
+referenceFile,sourceFile,sampleRate,startSample,numSamples,scaleGain
+reference_01.wav,04_BN1-147-Gb_comp_mic.wav,44100,321613,220500,1.28678400606873
+reference_02.wav,05_Rock1-90-C#_comp_mic.wav,44100,595351,220500,0.225281864986469
+reference_03.wav,04_Jazz2-187-F#_comp_mic.wav,44100,342481,220500,0.39147446369171
