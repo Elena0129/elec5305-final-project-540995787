@@ -1,10 +1,15 @@
-function report = run_capacity_ablation(action)
+function report = run_capacity_ablation(action, resume)
 % Compare two objectives with the same one-shelf EQ.
 % Existing three-gain methods provide context.
+% Use a second argument false to start fresh without a saved checkpoint.
 
 if nargin == 0
     action = "run";
 end
+
+if nargin < 2, resume = true; end
+assert(islogical(resume) && isscalar(resume), ...
+    'ELEC5305:ResumeFlag', 'Resume must be true or false.');
 
 action = string(action);
 
@@ -107,7 +112,9 @@ signature.CentroidGains = centroid.HighGainDB;
 signature.AudioFiles = fileState(rootDir, ...
     [base.ReferencePath;base.InputPath;centroid.OutputPath]);
 
-signature.Code = fileread([mfilename('fullpath') '.m']);
+signature.Code = {fileread([mfilename('fullpath') '.m']), ...
+    fileread(fullfile(rootDir,'project_param_eq.m')), ...
+    fileread(fullfile(rootDir,'project_audio_path.m'))};
 
 checkpoint = fullfile(outDir,'checkpoint.mat');
 
@@ -116,7 +123,7 @@ waveErrors = zeros(240,1);
 evaluations = zeros(240,1);
 completed = 0;
 
-if isfile(checkpoint)
+if resume && isfile(checkpoint)
     saved = load(checkpoint);
 
     assert(isequaln(saved.signature,signature), ...
@@ -559,18 +566,8 @@ end
 
 
 function p = resolvePath(rootDir,value)
-
-p = string(value);
-
-assert(~ismissing(p) && strlength(p) > 0, ...
-    'An audio path is empty.');
-
-if ~isfile(p)
-    p = string(fullfile(rootDir,char(p)));
-end
-
-assert(isfile(p), ...
-    'Audio file is missing: %s',char(p));
+% Resolve historical paths against this checkout, never an old copy.
+p = project_audio_path(rootDir,value);
 end
 
 
@@ -747,12 +744,12 @@ ax.Position = [0.13 0.26 0.83 0.63];
 
 drawnow nocallbacks;
 
-fprintf('Ablation figure %d: capturing window...\n',plotID);
+fprintf('Ablation figure %d: exporting figure...\n',plotID);
 
-frame = getframe(fig);
+
 path = fullfile(outDir,fileName);
 
-imwrite(frame.cdata,path);
+exportgraphics(fig,path,'Resolution',150);
 info = imfinfo(path);
 
 fprintf('Saved: %s\nImage size: %d x %d pixels\n', ...

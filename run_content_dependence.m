@@ -475,18 +475,8 @@ end
 
 
 function p = resolvePath(rootDir,value)
-
-p = string(value);
-
-assert(~ismissing(p) && strlength(p) > 0, ...
-    'An audio path is empty.');
-
-if ~isfile(p)
-    p = string(fullfile(rootDir,char(p)));
-end
-
-assert(isfile(p), ...
-    'Audio file is missing: %s',char(p));
+% Resolve historical paths against this checkout, never an old copy.
+p = project_audio_path(rootDir,value);
 end
 
 
@@ -598,11 +588,11 @@ ax.Position = [0.13 0.24 0.83 0.65];
 
 drawnow nocallbacks;
 
-fprintf('Content figure %d: capturing window...\n',plotID);
-frame = getframe(fig);
+fprintf('Content figure %d: exporting figure...\n',plotID);
+
 
 path = fullfile(outDir,fileName);
-imwrite(frame.cdata,path);
+exportgraphics(fig,path,'Resolution',150);
 
 info = imfinfo(path);
 

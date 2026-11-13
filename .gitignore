@@ -1,0 +1,19 @@
+# macOS metadata and MATLAB autosaves
+.DS_Store
+._*
+__MACOSX/
+*.asv
+*.m~
+
+# Original GuitarSet archive and extraction; prepared excerpts stay tracked
+data/raw/
+data/raw_archives/
+
+# Batch output audio is reproducible; the pilot examples stay tracked
+results/**/*.wav
+results/**/checkpoint*.mat
+results/**/*.pending.mat
+
+# Local review and transfer archives
+GitHub_upload/
+distorted_upload/

@@ -1,11 +1,16 @@
-function report = run_model_mismatch(action)
+function report = run_model_mismatch(action, resume)
 % Evaluate fixed EQ models under frequency and bandwidth mismatch.
+% Use a second argument false to start fresh without a saved checkpoint.
 % Numerical evaluation and figure capture are separate actions.
 % Compatible with the filter-design interface used in MATLAB R2025b.
 
 if nargin == 0
     action = "run";
 end
+
+if nargin < 2, resume = true; end
+assert(islogical(resume) && isscalar(resume), ...
+    'ELEC5305:ResumeFlag', 'Resume must be true or false.');
 
 action = lower(string(action));
 
@@ -185,12 +190,14 @@ signature.Settings = cfg;
 signature.References = refs;
 signature.ReferenceBytes = fileBytes;
 signature.ReferenceDates = fileDates;
-signature.Source = fileread([mfilename('fullpath') '.m']);
+signature.Source = {fileread([mfilename('fullpath') '.m']), ...
+    fileread(fullfile(rootDir,'project_param_eq.m')), ...
+    fileread(fullfile(rootDir,'project_audio_path.m'))};
 signature.MATLABVersion = version;
 
 checkpointFile = fullfile(outDir, 'checkpoint.mat');
 
-if isfile(checkpointFile)
+if resume && isfile(checkpointFile)
 
     saved = load(checkpointFile, 'state');
     state = saved.state;
@@ -248,7 +255,7 @@ for p = state.Completed+1:height(manifest)
         char(entry.Scenario),char(entry.GainSign));
 
     % Generate corruption using its true center and bandwidth.
-    [b,a] = designParamEQ(2,entry.CorruptionGainDB, ...
+    [b,a] = project_param_eq(2,entry.CorruptionGainDB, ...
         entry.CorruptionF0Hz/(fs/2), ...
         entry.CorruptionBandwidthHz/(fs/2), ...
         'Orientation','row');
@@ -322,7 +329,7 @@ for p = state.Completed+1:height(manifest)
 
     % The oracle uses true corruption parameters.
     % It is a diagnostic control, not an automatic estimator.
-    [b,a] = designParamEQ(2,-entry.CorruptionGainDB, ...
+    [b,a] = project_param_eq(2,-entry.CorruptionGainDB, ...
         entry.CorruptionF0Hz/(fs/2), ...
         entry.CorruptionBandwidthHz/(fs/2), ...
         'Orientation','row');
@@ -696,7 +703,7 @@ for section = 1:3
 
     elseif section == 2
 
-        [b,a] = designParamEQ(2,gains(section), ...
+        [b,a] = project_param_eq(2,gains(section), ...
             cfg.FixedFrequencies(section)/(fs/2), ...
             cfg.FixedBandwidth/(fs/2), ...
             'Orientation','row');
@@ -785,19 +792,8 @@ end
 
 
 function path = resolvePath(rootDir,value)
-
-path = string(value);
-
-assert(~ismissing(path) && strlength(path) > 0, ...
-    'An audio path is empty.');
-
-if ~isfile(path)
-    path = string(fullfile(rootDir,char(path)));
-end
-
-assert(isfile(path), ...
-    'Audio file is missing: %s',char(path));
-
+% Resolve historical paths against this checkout, never an old copy.
+path = project_audio_path(rootDir,value);
 end
 
 
@@ -1040,8 +1036,8 @@ for plotID = 1:3
 
     screen = get(groot,'ScreenSize');
 
-    width = min(1100,floor(0.85*screen(3)));
-    heightPixels = min(740,floor(0.80*screen(4)));
+    width = max(800,min(1100,floor(0.85*screen(3))));
+    heightPixels = max(600,min(740,floor(0.80*screen(4))));
 
     fig = figure( ...
         'Color','w', ...
@@ -1212,11 +1208,11 @@ for plotID = 1:3
 
     drawnow nocallbacks;
 
-    frame = getframe(fig);
+    
 
     path = fullfile(figureDir,names{plotID});
 
-    imwrite(frame.cdata,path);
+    exportgraphics(fig,path,'Resolution',150);
 
     info = imfinfo(path);
 

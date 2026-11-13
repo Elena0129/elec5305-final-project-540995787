@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Is Spectral Centroid Enough? · ELEC5305</title>
+  <meta name="description" content="A MATLAB study of centroid, three-band and differentiable audio equalisation, with measured results and listening examples.">
+  <style>
+    :root{--ink:#172d3b;--muted:#536673;--paper:#f7f7f2;--line:#d4dcd9;--blue:#12647e;--orange:#ad4824;--white:#fff}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:var(--blue);text-underline-offset:4px}a:hover{color:var(--orange)}a:focus-visible,audio:focus-visible{outline:3px solid var(--orange);outline-offset:5px}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 30px}.masthead{border-bottom:1px solid var(--line)}.masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:21px;padding-bottom:21px}.brand{font-weight:700;letter-spacing:.06em;font-size:13px;text-decoration:none;color:var(--ink)}nav{display:flex;gap:24px;font-size:14px}nav a{text-decoration:none}
+    header.wrap{padding:65px 30px 46px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:750;color:var(--orange);margin:0 0 22px}.hero{display:grid;grid-template-columns:1.65fr 1fr;gap:55px;align-items:end}h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;line-height:1.08;letter-spacing:-.03em}h1{font-size:clamp(42px,5.5vw,70px);margin:0 0 23px;max-width:780px}h2{font-size:clamp(30px,3.4vw,44px);margin:0 0 23px}h3{font-size:18px;margin:0 0 12px}.subtitle{font-size:21px;line-height:1.45;max-width:670px;margin:0 0 22px}.byline,.muted{color:var(--muted)}.byline{font-size:14px;margin:0 0 27px}.button{display:inline-block;background:var(--ink);color:white;text-decoration:none;padding:11px 19px;border-radius:3px;font-size:14px;font-weight:650}.button:hover{background:var(--blue);color:white}.hero aside{border-left:3px solid var(--orange);padding:4px 0 4px 24px}.hero aside p{margin:0 0 16px}.hero aside p:last-child{margin-bottom:0}.small{font-size:14px}.facts{display:flex;gap:35px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-top:40px}.facts strong{font-size:25px;font-family:Georgia,serif;font-weight:500}.facts span{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    main section{padding:52px 0;border-bottom:1px solid var(--line)}.section-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:55px}.section-intro{max-width:620px;margin:0 0 28px}.table-wrap{overflow-x:auto;background:var(--white);border:1px solid var(--line)}table{border-collapse:collapse;width:100%;font-size:14px}caption{text-align:left;padding:15px 18px;font-size:13px;color:var(--muted)}th,td{padding:13px 18px;text-align:left;border-top:1px solid var(--line)}thead th{border-top:0;background:#edf1ee;font-weight:650}tbody tr:last-child{background:#edf5f5}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}figure{margin:30px 0 0;background:white;border:1px solid var(--line);padding:22px}figure img{display:block;width:100%;height:auto}figcaption{color:var(--muted);font-size:13px;margin-top:17px;max-width:850px}.wide-figure{margin-top:36px}.methods{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px}.method{border-top:2px solid var(--ink);padding-top:17px}.method .letter{font:28px Georgia,serif;color:var(--orange);display:block;margin-bottom:13px}.method p{font-size:15px;margin:0}.audio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0 28px;margin-top:20px}.audio-item{padding:20px 0;border-top:1px solid var(--line)}.audio-item p{font-size:14px;margin:0 0 9px}audio{display:block;width:100%;max-width:480px;height:42px}.steps{margin:20px 0;padding-left:25px}.steps li{padding:5px 0}code{background:#e7eeeb;border-radius:3px;padding:3px 6px;font-size:.87em}.resource-status{font-size:14px;color:var(--muted);margin-top:23px}.resource-status p{margin:7px 0}.references{font-size:14px;padding-left:20px}.references li{padding:5px 0}footer{padding:30px 0 45px;color:var(--muted);font-size:13px}footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:760px){.wrap{padding:0 20px}.masthead .wrap{align-items:flex-start;flex-direction:column;gap:10px}nav{gap:19px;flex-wrap:wrap}header.wrap{padding:40px 20px 35px}.hero,.section-grid{grid-template-columns:1fr;gap:25px}.hero aside{font-size:15px}.facts{gap:22px}.methods{grid-template-columns:1fr;gap:24px}.audio-list{grid-template-columns:1fr}main section{padding:37px 0}figure{padding:10px}th,td{padding:10px 12px}.subtitle{font-size:19px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <div class="masthead"><div class="wrap">
+    <a class="brand" href="#top">ELEC5305 / AUDIO PROCESSING</a>
+    <nav aria-label="Page navigation"><a href="#results">Results</a><a href="#listen">Listen</a><a href="#reproduce">Run the code</a></nav>
+  </div></div>
+  <header id="top" class="wrap">
+    <p class="eyebrow">Final project · Yishu Zhang · 540995787</p>
+    <div class="hero"><div>
+      <h1>Is spectral<br>centroid enough?</h1>
+      <p class="subtitle">Interpretable versus differentiable automatic equalisation</p>
+      <p class="byline">A controlled MATLAB study using GuitarSet recordings.</p>
+      <a class="button" href="https://github.com/Elena0129/elec5305-final-project-540995787">View the code</a>
+    </div><aside>
+      <p><strong>One centroid can match while the spectral shape remains different.</strong></p>
+      <p class="small muted">The study compares a centroid target, three band powers, and a detailed spectral target. Additional experiments test how much the objective, processor capacity and filter assumptions matter.</p>
+    </aside></div>
+    <div class="facts" aria-label="Experiment design">
+      <div><strong>30</strong><span>Test recordings</span></div>
+      <div><strong>240</strong><span>Controlled pairs</span></div>
+      <div><strong>3</strong><span>Correction methods</span></div>
+      <div><strong>5</strong><span>Experiment modules</span></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section id="methods">
+      <div class="section-grid"><div><p class="eyebrow">The comparison</p><h2>Different targets.<br>Measured audio.</h2></div><div>
+        <p>Every correction method receives the same distorted signal and its clean reference. The controlled filters use low-shelf, peaking and high-shelf sections at 250, 1000 and 2500 Hz.</p>
+        <p class="muted small">This is an offline, reference-based restoration study. Method C fits three gains with automatic differentiation; it does not train a neural network across recordings.</p>
+      </div></div>
+      <div class="methods">
+        <article class="method"><span class="letter">A</span><h3>Spectral centroid</h3><p>Match one power spectral centroid by searching the gain of a 2500 Hz high shelf.</p></article>
+        <article class="method"><span class="letter">B</span><h3>Three-band power</h3><p>Adjust three gains using low-, mid- and high-band power errors.</p></article>
+        <article class="method"><span class="letter">C</span><h3>Differentiable spectrum</h3><p>Fit three bounded gains to the detailed log-power spectrum with Adam.</p></article>
+      </div>
+    </section>
+    <section id="results">
+      <p class="eyebrow">Recorded results</p><h2>A small centroid error is only part of the picture.</h2>
+      <p class="section-intro">Across the 240 matched-model test pairs, B and C reduce spectral errors more consistently. The centroid method also recovers matching high-shelf distortions very accurately, so the result depends on the corruption and the available processor.</p>
+      <div class="table-wrap"><table>
+        <caption>Means from the saved formal experiment CSV files. Smaller errors indicate closer reference recovery.</caption>
+        <thead><tr><th scope="col">Method</th><th scope="col" class="num">Centroid / Hz</th><th scope="col" class="num">Raw RMSE / dB</th><th scope="col" class="num">Shape RMSE / dB</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Distorted input</th><td class="num">163.159985</td><td class="num">3.167138</td><td class="num">3.361678</td></tr>
+          <tr><th scope="row">A · Centroid</th><td class="num">7.882010</td><td class="num">4.549816</td><td class="num">3.685349</td></tr>
+          <tr><th scope="row">B · Three-band</th><td class="num">0.742357</td><td class="num">0.017420</td><td class="num">0.016942</td></tr>
+          <tr><th scope="row">C · Differentiable</th><td class="num">0.329024</td><td class="num">0.001708</td><td class="num">0.005018</td></tr>
+        </tbody>
+      </table></div>
+      <figure class="wide-figure"><img src="results/verification/centroid_counterexample.png" alt="Recorded example showing similar reference and output centroids with different spectral shapes" loading="lazy"><figcaption>One illustrative counterexample: <code>clip_005_mid_boost</code>. Centroid error is approximately 0.000404 Hz while power-level-controlled shape RMSE is approximately 2.640119 dB. This is a selected example, not an average result.</figcaption></figure>
+      <figure><img src="results/model_mismatch/figures/mismatch_spectral_error.png" alt="Measured spectral errors under matched, frequency-shifted, bandwidth-shifted and jointly shifted filter models" loading="lazy"><figcaption>Changing the corruption frequency or bandwidth reduces the advantage of the fixed correction model. The known-inverse oracle is a diagnostic bound, not an automatic competitor. <a href="https://github.com/Elena0129/elec5305-final-project-540995787/tree/main/results">Inspect the full result tables and figures.</a></figcaption></figure>
+      <p class="small muted">Confidence intervals use 2000 bootstrap samples of the six performer clusters. Spectral metrics and power matching do not establish perceived sound quality; a controlled listening test was not performed.</p>
+    </section>
+    <section id="listen">
+      <p class="eyebrow">Listening examples</p><h2>Hear the same mid-cut pair.</h2>
+      <p class="section-intro">These five files use the first pilot excerpt and its controlled −6 dB peaking distortion at 1000 Hz. They illustrate the processors used in the study.</p>
+      <div class="audio-list">
+        <div class="audio-item"><p><strong>Reference</strong></p><audio controls preload="none" aria-label="Reference pilot audio" src="data/pilot/reference_01.wav"></audio></div>
+        <div class="audio-item"><p><strong>Distorted input</strong> · mid-frequency cut</p><audio controls preload="none" aria-label="Mid-cut distorted pilot audio" src="data/pilot/distorted/reference_01_peaking_-6dB.wav"></audio></div>
+        <div class="audio-item"><p><strong>A · Centroid correction</strong></p><audio controls preload="none" aria-label="Centroid-corrected pilot audio" src="data/pilot/corrected/reference_01_midcut_centroid_corrected.wav"></audio></div>
+        <div class="audio-item"><p><strong>B · Three-band correction</strong></p><audio controls preload="none" aria-label="Three-band-corrected pilot audio" src="data/pilot/corrected/reference_01_midcut_multiband_corrected.wav"></audio></div>
+        <div class="audio-item"><p><strong>C · Differentiable correction</strong></p><audio controls preload="none" aria-label="Differentiable-corrected pilot audio" src="data/pilot/corrected/reference_01_midcut_differentiable_corrected.wav"></audio></div>
+      </div>
+    </section>
+    <section id="reproduce">
+      <div class="section-grid"><div><p class="eyebrow">Reproduce the work</p><h2>Start with the pilot.<br>Then refit the benchmark.</h2></div><div>
+        <ol class="steps"><li>Clone or download the repository, including <code>data/</code> and <code>results/</code>.</li><li>Open the root folder in MATLAB with Audio Toolbox, Signal Processing Toolbox and Deep Learning Toolbox.</li><li>Run <code>run('run_project_demo.m')</code>, or use Run All in the matching Live Script.</li><li>For a fresh fit of all five modules, run <code>reproduce_results(false)</code>.</li></ol>
+        <p class="small muted">The default demonstration computes the pilot corrections and reads saved formal results. Full reproduction fits the formal experiments again. Omitted output WAVs can also be rebuilt from saved gains for inspection without claiming a new fit.</p>
+        <a href="https://github.com/Elena0129/elec5305-final-project-540995787#quick-start">Read the complete setup and run instructions</a>
+      </div></div>
+      <div class="resource-status" aria-label="Submission resources">
+        <p><strong>Report PDF:</strong> final upload pending.</p>
+        <p><strong>Demonstration video:</strong> recording and final link pending.</p>
+      </div>
+    </section>
+    <section id="sources">
+      <p class="eyebrow">Research and source data</p><h2>Grounded in published work.</h2>
+      <ol class="references"><li>V. Välimäki and J. D. Reiss, “All About Audio Equalization: Solutions and Frontiers,” <em>Applied Sciences</em>, 2016. <a href="https://doi.org/10.3390/app6050129">DOI</a>.</li><li>S. Nercessian, “Neural Parametric Equalizer Matching Using Differentiable Biquads,” <em>DAFx</em>, 2020. <a href="https://www.dafx.de/paper-archive/2020/proceedings/papers/DAFx2020_paper_7.pdf">Paper</a>.</li><li>Q. Xi, R. M. Bittner, J. Pauwels, X. Ye and J. P. Bello, “GuitarSet: A Dataset for Guitar Transcription,” <em>ISMIR</em>, 2018. <a href="https://archives.ismir.net/ismir2018/paper/000188.pdf">Paper</a> · <a href="https://zenodo.org/records/3371780">Dataset and reuse information</a>.</li></ol>
+      <p class="small muted">The supplied excerpts and EQ examples are derived from GuitarSet's mono microphone recordings. Mono conversion, DC removal, excerpt selection, scaling and EQ processing are documented in the repository. <a href="https://github.com/Elena0129/elec5305-final-project-540995787#references">Full academic references.</a></p>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>Yishu Zhang · 540995787 · ELEC5305</span><a href="https://github.com/Elena0129/elec5305-final-project-540995787">GitHub repository</a></div></footer>
+</body>
+</html>

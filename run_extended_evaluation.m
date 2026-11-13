@@ -550,17 +550,8 @@ end
 
 
 function p = resolveAudio(rootDir,value)
-
-assert(~ismissing(value) && strlength(string(value)) > 0, ...
-    'An audio path is empty.');
-
-p = string(value);
-
-if ~isfile(p)
-    p = string(fullfile(rootDir,char(p)));
-end
-
-assert(isfile(p),'Audio file is missing: %s',char(p));
+% Resolve historical paths against this checkout, never an old copy.
+p = project_audio_path(rootDir,value);
 end
 
 

@@ -160,6 +160,8 @@ switch plotID
             fullfile(dataDir,'evaluation_settings.mat'),'cfg');
         cfg = settings.cfg;
 
+        restore_benchmark_audio(chosen.PairID);
+
         [ref,fs] = audioread( ...
             resolvePath(rootDir,chosen.ReferencePath));
 
@@ -262,13 +264,13 @@ ax.Position = [0.13 0.24 0.83 0.65];
 
 drawnow nocallbacks;
 
-fprintf('Figure %d: capturing window...\n',plotID);
-frame = getframe(fig);
+fprintf('Figure %d: exporting figure...\n',plotID);
+
 
 outPath = fullfile(outDir,char(fileName));
 
 fprintf('Figure %d: saving PNG...\n',plotID);
-imwrite(frame.cdata,outPath);
+exportgraphics(fig,outPath,'Resolution',150);
 
 info = imfinfo(outPath);
 
@@ -278,15 +280,6 @@ end
 
 
 function p = resolvePath(rootDir,value)
-
-p = string(value);
-
-assert(~ismissing(p) && strlength(p) > 0, ...
-    'An audio path is empty.');
-
-if ~isfile(p)
-    p = string(fullfile(rootDir,char(p)));
-end
-
-assert(isfile(p),'Audio file is missing: %s',char(p));
+% Resolve historical paths against this checkout, never an old copy.
+p = project_audio_path(rootDir,value);
 end
