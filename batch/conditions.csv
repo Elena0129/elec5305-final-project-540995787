@@ -1,0 +1,9 @@
+Condition,LowGainDB,MidGainDB,HighGainDB
+low_cut,-6,0,0
+low_boost,6,0,0
+mid_cut,0,-6,0
+mid_boost,0,6,0
+high_cut,0,0,-6
+high_boost,0,0,6
+mixed_A,6,-6,6
+mixed_B,-6,6,-6
