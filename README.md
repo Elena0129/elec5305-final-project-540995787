@@ -175,6 +175,10 @@ Use the same pilot reference and mid-cut distortion for these comparisons:
 - [B: Three-band correction](data/pilot/corrected/reference_01_midcut_multiband_corrected.wav)
 - [C: Differentiable correction](data/pilot/corrected/reference_01_midcut_differentiable_corrected.wav)
 
+## AI-use acknowledgment
+
+I used ChatGPT (GPT-6.1 Sol; OpenAI; https://chatgpt.com) to review and revise parts of my report, improve clarity, check technical explanations, and assist with MATLAB troubleshooting and presentation materials. I wrote the original report, ran the MATLAB code, and recorded and narrated the demonstration myself. I reviewed the suggestions before using them and take responsibility for the final work.
+
 ## References
 
 These are academic publications. Software documentation and dataset download links are listed separately below.
